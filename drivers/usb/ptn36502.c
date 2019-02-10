@@ -19,8 +19,6 @@
 #ifdef CONFIG_COMPAT
 #include <linux/compat.h>
 #endif
-extern int i2c_devinfo_device_write(char* buf);
-
 u8 is_ptn36502_safe_mode = 0;
 
 void set_ptn36502_ldo_en(void)
@@ -275,14 +273,12 @@ static int ptn36502_probe(struct i2c_client *client,
 	printk("gpio56  value is %d\n",gpio_get_value(56));
 	r = ptn36502_i2c_read_reg(client,CHIP_ID,&value);
 	if(r < 0) {
-		i2c_devinfo_device_write("PTN36502:0;");
 		dev_err(&client->dev,"%s:CHIP_ID_reg read fail,please check HW.\n", __func__);
 		return -ENOMEM;
 	}
 
 	r = ptn36502_init(client);
 	if(r < 0) {
-		i2c_devinfo_device_write("PTN36502:0;");
 		dev_err(&client->dev,"%s:ptn36502_init fail , exit probe.\n", __func__);
 		return -ENOMEM;
 	}
@@ -290,7 +286,6 @@ static int ptn36502_probe(struct i2c_client *client,
 	is_ptn36502_safe_mode = 1;
 	dev_err(&client->dev,"%s:set is_ptn36502_safe_mode = %d .\n", __func__,is_ptn36502_safe_mode);
 
-	i2c_devinfo_device_write("PTN36502:1;");
 	__gpio_set_value(56, 0);
 	dev_err(&client->dev,"%s: ------- ptn36502_probe end------\n", __func__);
 

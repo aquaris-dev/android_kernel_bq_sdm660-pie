@@ -189,8 +189,6 @@ struct chip_monitor_data *g_chip_monitor_data;
 extern int g_self_test_entered;
 #endif
 
-extern int i2c_devinfo_device_write(char* buf);
-
 int himax_report_data_init(void);
 extern int himax_get_touch_data_size(void);
 //void himax_HW_reset(uint8_t loadconfig,uint8_t int_off);
@@ -1828,14 +1826,9 @@ int himax_chip_common_probe(struct i2c_client *client, const struct i2c_device_i
 
     if (himax_ic_package_check(ts->client) == false)
     {
-        E("Himax chip doesn NOT EXIST");
-		i2c_devinfo_device_write("TP:0;");
+        E("Himax chip does NOT EXIST");
         goto err_ic_package_failed;
     }
-	else
-	{
-		i2c_devinfo_device_write("TP:1;");
-	}
 
     if (pdata->virtual_key)
         ts->button = pdata->virtual_key;
